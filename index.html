@@ -5,47 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VERTEX14 // THE PLATFORM</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;600;700&family=Syncopate:wght@400;700&family=Oswald:wght@200;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;400;700&family=Syncopate:wght@400;700&display=swap');
         
-        :root {
-            --bg-pure: #000000; --bg-dark: #050507; --bg-card: #0d0d11;
-            --wood-tone: #b89474; --text-light: #f5f5f7; --text-muted: #6e6e73;
-            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #050507; color: #f5f5f7; font-family: 'Assistant', sans-serif; overflow-x: hidden; }
+
+        /* Splash Screen Fix */
+        #splash-screen { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background-color: #000; z-index: 9999; 
+            display: flex; justify-content: center; align-items: center;
+            animation: hideSplash 0.5s ease-in 3s forwards;
         }
+        @keyframes hideSplash { to { opacity: 0; visibility: hidden; display: none; } }
+        #splash-logo { width: 80%; max-width: 300px; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Assistant', sans-serif; }
-        html { scroll-behavior: smooth; overflow-x: hidden; width: 100%; }
-        body { background-color: var(--bg-dark); color: var(--text-light); width: 100%; overflow-x: hidden; }
+        /* Layout Fixes */
+        header { position: fixed; top: 0; width: 100%; z-index: 1000; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.8); }
+        .hero { height: 100vh; width: 100%; display: flex; align-items: center; padding: 0 5%; }
         
-        /* תיקוני רספונסיביות קריטיים */
-        img { max-width: 100%; height: auto; }
-
-        #splash-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg-pure); z-index: 9999; display: flex; justify-content: center; align-items: center; animation: fadeOutSplash 2.2s forwards; }
-        #splash-logo { height: 120px; max-width: 80%; object-fit: contain; }
-        @keyframes fadeOutSplash { to { opacity: 0; visibility: hidden; } }
-
-        header { position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 15px 4%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); flex-wrap: wrap; }
-        nav { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-        nav a { color: var(--text-muted); font-size: 11px; text-transform: uppercase; text-decoration: none; }
-
-        .hero { height: 100vh; width: 100%; position: relative; display: flex; align-items: center; padding: 0 5%; }
-        .hero-slideshow-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        .hero-slide { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s; }
-        .hero-slide.active { opacity: 1; }
-        .hero-content { position: relative; z-index: 3; max-width: 600px; }
-        .hero h1 { font-size: 38px; font-family: 'Syncopate', sans-serif; }
-
-        section { padding: 60px 5%; }
-        .interactive-booking { display: grid; grid-template-columns: 1fr; gap: 30px; background: var(--bg-card); padding: 20px; }
-        @media (min-width: 768px) { .interactive-booking { grid-template-columns: 1.2fr 1fr; } }
-
-        .menu-filter-container { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .filter-btn { background: #141418; border: 1px solid #333; color: white; padding: 8px 15px; cursor: pointer; }
-
-        .about-layout { display: grid; grid-template-columns: 1fr; gap: 30px; background: var(--bg-card); padding: 30px; }
-        @media (min-width: 768px) { .about-layout { grid-template-columns: 1fr 2fr; } }
+        section { padding: 80px 5%; width: 100%; }
         
-        .about-bio-text { font-size: 16px; line-height: 1.8; color: #d1d1d6; }
+        /* Mobile Specific Fix */
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 10px; }
+            .hero h1 { font-size: 28px !important; }
+            section { padding: 40px 5%; }
+        }
     </style>
 </head>
 <body>
@@ -54,19 +40,12 @@
     <header>
         <div class="logo-container"><img src="logo_transparent.png" style="height:30px;"></div>
         <nav>
-            <a href="#booking">הזמנות</a>
-            <a href="#events">אירועים</a>
-            <a href="#cafe">קפה ובר</a>
-            <a href="#about">אודות</a>
+            <a href="#booking" style="color:white; text-decoration:none; margin:0 10px;">הזמנות</a>
+            <a href="#about" style="color:white; text-decoration:none; margin:0 10px;">אודות</a>
         </nav>
     </header>
 
     <div class="hero">
-        <div class="hero-slideshow-container">
-            <img src="Image1.png" class="hero-slide active">
-            <img src="personal.png" class="hero-slide">
-            <img src="cafe.png" class="hero-slide">
-        </div>
         <div class="hero-content">
             <h1>VERTEX14</h1>
             <p>מרחב ארכיטקטוני בנמל תל אביב.</p>
@@ -75,33 +54,18 @@
 
     <section id="booking">
         <h2>שיריינו נפח עבודה</h2>
-        <div class="interactive-booking">
-            </div>
     </section>
 
     <section id="about">
-        <h2>צוות ומחקר רעיוני</h2>
-        <div class="about-layout">
-            <div>
-                <p><strong>DESIGNER:</strong> Tzachi Azuz</p>
-            </div>
-            <div class="about-bio-container">
-                <p class="about-bio-text">
-                    היי אני צחי עזוז, סטודנט שנה ב' לעיצוב פנים ותקשורת חזותית, בפרוייקט זה הקמתי את המרכז הלימודי VERTEX14 בנמל תל אביב בביתן 14, חשבתי על מה אני בתור סטודנט הייתי רוצה שיהיה במרכז, המרכז משלב פנאי ותרבות, הופעות וחיי לילה, שפה גאומטרית חזקה של משולשים ושבירות, שפה חמימה ומודגשת בתוך הטירוף של נמל תל אביב.
-                </p>
-            </div>
-        </div>
+        <h2>אודות</h2>
+        <p>Tzachi Azuz // VERTEX14 - מרכז לימודי בביתן 14, נמל תל אביב.</p>
     </section>
 
     <script>
-        // לוגיקת מצגת
-        let currentSlideIndex = 0;
-        const slides = document.querySelectorAll('.hero-slide');
-        setInterval(() => {
-            slides[currentSlideIndex].classList.remove('active');
-            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-            slides[currentSlideIndex].classList.add('active');
-        }, 4000);
+        // מחיקת מסך הפתיחה מהדום לאחר סיום ההנפשה
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.display = 'none';
+        }, 3500);
     </script>
 </body>
 </html>
