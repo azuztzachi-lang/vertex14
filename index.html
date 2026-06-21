@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VERTEX14 // THE PLATFORM</title>
+    
     <style>
     /* זה התיקון שמונע מהאתר "לברוח" בטלפון */
     img, .interactive-booking, .hero, section {
@@ -13,6 +14,14 @@
     @media (max-width: 768px) {
         header { flex-direction: column !important; }
         .gallery-grid { grid-template-columns: 1fr !important; }
+        @media (max-width: 600px) {
+    header { padding: 10px !important; }
+    nav { 
+        gap: 5px !important; 
+        font-size: 10px !important; 
+    }
+    nav a { margin-right: 5px !important; }
+}
     }
 </style>
     <style>
