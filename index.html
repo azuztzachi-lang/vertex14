@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VERTEX14 // THE PLATFORM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;600;700&family=Syncopate:wght@400;700&family=Oswald:wght@200;400&display=swap');
+        
+        :root {
+            --bg-pure: #000000;
+            --bg-dark: #050507;
+            --bg-card: #0d0d11;
+            --accent-glow: rgba(255, 255, 255, 0.95);
+            --wood-tone: #b89474;
+            --text-light: #f5f5f7;
+            --text-muted: #6e6e73;
+            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Assistant', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .custom-cursor-follower {
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 50%;
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.08s ease-out;
+        }
+
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: var(--bg-pure);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeOutSplash 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            pointer-events: none;
+        }
+
+        #splash-logo {
+            height: 120px;
+            opacity: 0;
+            animation: fadeInLogo 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        @keyframes fadeInLogo {
+            from { opacity: 0; transform: scale(0.92); filter: blur(6px); }
+            to { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+
+        @keyframes fadeOutSplash {
+            0% { opacity: 1; visibility: visible; }
+            75% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; display: none; }
+        }
+
+        header {
+            background: rgba(5, 5, 7, 0.8);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 6%;
+        }
+
+        .logo-container img {
+            height: 38px;
+            display: block;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            margin-right: 40px;
+            font-weight: 300;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: var(--transition-smooth);
+            position: relative;
+            padding-bottom: 6px;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0; width: 0; height: 1px;
+            background: white;
+            transition: var(--transition-smooth);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        nav a:hover::after { width: 100%; }
+        nav a:hover { color: var(--text-light); }
+
+        .hero {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 10%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .hero-slideshow-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(5, 5, 7, 0.2), var(--bg-dark));
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 700px;
+            border-right: 1px solid rgba(255,255,255,0.25);
+            padding-right: 35px;
+            animation: heroReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.5s both;
+        }
+
+        @keyframes heroReveal {
+            from { opacity: 0; transform: translateY(20px); filter: blur(8px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        .hero h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 64px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            line-height: 0.95;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+            max-width: 550px;
+        }
+
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(40px);
+            filter: blur(5px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-element.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        section {
+            padding: 120px 10%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .section-header { margin-bottom: 60px; }
+        .section-tag { font-family: 'Syncopate', sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 3px; color: var(--wood-tone); display: block; margin-bottom: 15px; }
+        .section-title { font-size: 36px; font-weight: 200; letter-spacing: -1px; }
+
+        .interactive-booking {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 60px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.02);
+            padding: 40px;
+        }
+
+        .booking-tabs { display: flex; gap: 15px; margin-bottom: 35px; }
+        .tab-btn {
+            background: #141418; border: 1px solid rgba(255,255,255,0.04); color: var(--text-muted);
+            padding: 15px 25px; font-size: 14px; font-weight: 400; transition: var(--transition-smooth);
+        }
+        .tab-btn:hover { color: var(--text-light); border-color: rgba(255,255,255,0.1); }
+        .tab-btn.active {
+            background: var(--text-light); color: var(--bg-pure); font-weight: 600; border-color: var(--text-light);
+            box-shadow: 0 10px 25px rgba(255,255,255,0.1);
+        }
+
+        .space-display { position: relative; height: 100%; min-height: 400px; overflow: hidden; background: #000; }
+        .space-img { width: 100%; height: 100%; object-fit: cover; display: none; opacity: 0.75; transition: opacity 0.4s ease-in-out; }
+        .space-img.active { display: block; }
+
+        .price-badge {
+            position: absolute; top: 30px; left: 30px; background: rgba(0, 0, 0, 0.85);
+            padding: 12px 20px; font-family: 'Oswald', sans-serif; font-size: 18px;
+            color: var(--wood-tone); border: 1px solid rgba(255,255,255,0.1); letter-spacing: 1px; z-index: 10;
+        }
+
+        .space-details-text { min-height: 60px; margin-bottom: 25px; color: var(--text-muted); font-weight: 300; font-size: 15px; }
+        .booking-fields { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+        .input-wrapper { position: relative; }
+
+        .booking-fields input, .custom-select-trigger, .credit-fields input {
+            width: 100%; background: #141418; border: 1px solid rgba(255,255,255,0.05);
+            padding: 16px; color: #fff; outline: none; text-align: right; font-size: 14px; transition: var(--transition-smooth);
+        }
+
+        .custom-select-trigger { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+
+        .calendar-dropdown, .time-dropdown {
+            position: absolute; top: 102%; right: 0; width: 100%;
+            background: #101014; border: 1px solid rgba(255,255,255,0.1);
+            z-index: 100; padding: 15px; display: none;
+        }
+
+        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .calendar-nav button { background: transparent; border: none; color: #fff; font-size: 16px; cursor: pointer; padding: 0 10px; }
+        .calendar-nav button:hover { color: var(--wood-tone); }
+        .calendar-current-month { font-family: 'Syncopate', sans-serif; font-size: 13px; color: var(--wood-tone); font-weight: bold; }
+        
+        .calendar-days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+        .cal-day-label { font-size: 11px; color: var(--text-muted); padding-bottom: 5px; }
+        
+        .cal-day { padding: 8px; font-size: 12px; color: #ccc; transition: all 0.2s; cursor: pointer; }
+        .cal-day:hover:not(.empty):not(.past) { background: rgba(255,255,255,0.1); color: #fff; }
+        .cal-day.selected { background: var(--text-light) !important; color: var(--bg-pure) !important; font-weight: bold; }
+        
+        .cal-day.past { opacity: 0.15; text-decoration: line-through; color: #555; cursor: not-allowed; }
+
+        .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .time-slot {
+            background: #18181c; border: 1px solid rgba(255,255,255,0.03); padding: 10px;
+            font-size: 12px; text-align: center; font-family: 'Oswald', sans-serif; color: var(--text-muted); transition: all 0.2s; cursor: pointer;
+        }
+        .time-slot:hover { border-color: rgba(255,255,255,0.2); color: #fff; }
+        .time-slot.selected { background: var(--wood-tone); color: #000; font-weight: bold; }
+
+        .duration-container { display: flex; gap: 10px; }
+        .duration-btn {
+            flex: 1; background: #141418; border: 1px solid rgba(255,255,255,0.05);
+            padding: 14px; color: var(--text-muted); font-size: 13px; text-align: center; transition: var(--transition-smooth); cursor: pointer;
+        }
+        .duration-btn.active { border-color: var(--text-light); color: var(--text-light); background: rgba(255,255,255,0.02); }
+        .duration-btn.disabled { opacity: 0.2; text-decoration: line-through; cursor: not-allowed; }
+
+        .submit-btn {
+            width: 100%; background: transparent; color: var(--text-light); border: 1px solid var(--text-light);
+            padding: 20px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; transition: var(--transition-smooth); cursor: pointer;
+        }
+        .submit-btn:hover { background: var(--text-light); color: var(--bg-pure); box-shadow: 0 0 30px rgba(255,255,255,0.2); }
+
+        .payment-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            z-index: 4500; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: var(--transition-smooth);
+        }
+        .payment-overlay.active { opacity: 1; visibility: visible; }
+        .payment-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); padding: 40px; max-width: 450px; width: 90%; transform: translateY(20px); transition: var(--transition-smooth); }
+        .payment-overlay.active .payment-card { transform: translateY(0); }
+        .payment-card h3 { font-family: 'Syncopate', sans-serif; font-size: 20px; color: #fff; text-align: center; margin-bottom: 25px; letter-spacing: 1px; }
+        
+        .credit-fields { display: flex; flex-direction: column; gap: 15px; }
+        .credit-row-half { display: flex; gap: 15px; }
+        .credit-fields input { text-align: center; font-family: 'Oswald', sans-serif; font-size: 15px; letter-spacing: 1px; }
+        
+        .pay-now-btn { width: 100%; background: var(--wood-tone); color: #000; border: none; padding: 18px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; transition: var(--transition-smooth); margin-top: 15px; cursor: pointer; }
+        .pay-now-btn:hover { background: #fff; color: #000; box-shadow: 0 0 20px rgba(255,255,255,0.15); }
+        .cancel-pay-btn { display: block; text-align: center; color: var(--text-muted); font-size: 13px; text-decoration: none; margin-top: 15px; transition: all 0.2s; }
+        .cancel-pay-btn:hover { color: #fff; }
+
+        .success-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 5000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: var(--transition-smooth);
+        }
+        .success-overlay.active { opacity: 1; visibility: visible; }
+        .success-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); padding: 50px; max-width: 500px; width: 90%; text-align: center; transform: translateY(30px); transition: var(--transition-smooth); }
+        .success-overlay.active .success-card { transform: translateY(0); }
+        .success-card h3 { font-family: 'Syncopate', sans-serif; font-size: 24px; color: #fff; letter-spacing: 1px; margin-bottom: 15px; }
+        .success-card .accent-line { width: 40px; height: 1px; background: var(--wood-tone); margin: 20px auto; }
+        .receipt-details { text-align: right; background: #141418; padding: 20px; border: 1px solid rgba(255,255,255,0.02); margin-bottom: 30px; font-size: 14px; color: #d1d1d6; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .close-receipt-btn { background: transparent; color: var(--text-light); border: 1px solid rgba(255,255,255,0.2); padding: 12px 30px; font-size: 13px; letter-spacing: 1px; transition: var(--transition-smooth); cursor: pointer; }
+        .close-receipt-btn:hover { border-color: #fff; background: #fff; color: #000; }
+
+        .events-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 60px;
+        }
+
+        .acoustic-equalizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 45px;
+            padding-bottom: 5px;
+        }
+
+        .eq-bar {
+            width: 3px;
+            background-color: var(--text-light);
+            height: 5px;
+            animation: bounceEqualizer 0.1s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounceEqualizer {
+            0% { height: 5px; }
+            100% { height: 40px; }
+        }
+
+        .eq-bar:nth-child(2) { animation-duration: 0.23s; animation-delay: 0.1s; }
+        .eq-bar:nth-child(3) { animation-duration: 0.17s; animation-delay: 0.2s; }
+        .eq-bar:nth-child(4) { animation-duration: 0.31s; animation-delay: 0.05s; }
+        .eq-bar:nth-child(5) { animation-duration: 0.25s; animation-delay: 0.15s; }
+        .eq-bar:nth-child(6) { animation-duration: 0.19s; animation-delay: 0.25s; }
+        .eq-bar:nth-child(7) { animation-duration: 0.28s; animation-delay: 0.08s; }
+
+        .events-layout { display: flex; flex-direction: column; gap: 15px; }
+        .event-node { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.02); border-left: 2px solid rgba(255,255,255,0.1); padding: 25px 35px; transition: var(--transition-smooth); cursor: pointer; }
+        .event-node:hover { border-left-color: var(--wood-tone); background: #121216; }
+        .event-main-info { display: flex; justify-content: space-between; align-items: center; }
+        .event-meta { font-family: 'Oswald', sans-serif; font-size: 13px; color: var(--wood-tone); letter-spacing: 1px; display: flex; gap: 30px; }
+        .event-node h3 { font-size: 20px; font-weight: 300; }
+        .event-short-desc { color: var(--text-muted); font-size: 14px; font-weight: 300; margin-top: 3px; }
+        .event-extended-details { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out, margin-top 0.3s ease; color: #a0a0a5; font-size: 14px; font-weight: 300; }
+        .event-node.active .event-extended-details { max-height: 150px; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; }
+        .event-details-trigger { font-size: 12px; color: var(--text-muted); }
+
+        .cafe-showcase { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: start; }
+        .cafe-image-wrapper { position: relative; height: 500px; overflow: hidden; position: sticky; top: 120px; border: 1px solid rgba(255,255,255,0.05); }
+        .cafe-image-wrapper img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.75); transition: var(--transition-smooth); }
+        
+        .menu-filter-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .filter-btn {
+            background: #141418; border: 1px solid rgba(255,255,255,0.04); color: var(--text-muted);
+            padding: 10px 20px; font-size: 13px; transition: var(--transition-smooth); cursor: pointer;
+        }
+        .filter-btn:hover { color: var(--text-light); }
+        .filter-btn.active { background: transparent; border-color: var(--wood-tone); color: var(--wood-tone); font-weight: 600; }
+
+        .menu-list { display: flex; flex-direction: column; gap: 20px; }
+        .menu-item-node { transition: opacity 0.4s ease, transform 0.4s ease; }
+        .menu-category-title { font-family: 'Oswald', sans-serif; font-size: 16px; color: var(--wood-tone); letter-spacing: 2px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; margin-bottom: 10px; margin-top: 20px; }
+        .menu-row { display: flex; justify-content: space-between; align-items: baseline; }
+        .menu-row .title-item { font-size: 16px; font-weight: 300; }
+        .menu-row .desc-item { font-size: 12px; color: var(--text-muted); display: block; margin-top: 2px; }
+        .menu-row .line-dots { flex-grow: 1; border-bottom: 1px dashed rgba(255,255,255,0.05); margin: 0 15px; }
+        .menu-row .cost-item { font-family: 'Oswald', sans-serif; color: var(--wood-tone); font-size: 15px; }
+
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .gallery-item { position: relative; height: 280px; background: #000; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.65; transition: var(--transition-smooth); }
+        .gallery-item:hover img { opacity: 0.95; transform: scale(1.02); }
+        .gallery-caption { position: absolute; bottom: 20px; right: 20px; font-size: 13px; font-weight: 300; letter-spacing: 0.5px; background: rgba(0,0,0,0.8); padding: 8px 15px; }
+
+        .about-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 80px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.02);
+            padding: 60px;
+        }
+        .about-meta-info {
+            border-left: 1px solid rgba(255,255,255,0.05);
+            padding-left: 40px;
+        }
+        .about-meta-row { margin-bottom: 20px; }
+        .about-meta-label { font-family: 'Syncopate', sans-serif; font-size: 10px; color: var(--wood-tone); display: block; letter-spacing: 1px; margin-bottom: 4px; }
+        .about-meta-value { font-size: 15px; font-weight: 300; color: var(--text-light); }
+        .about-bio-text {
+            font-size: 18px;
+            font-weight: 200;
+            color: #d1d1d6;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        footer { border-top: 1px solid rgba(255, 255, 255, 0.01); padding: 60px; text-align: center; font-size: 11px; color: var(--text-muted); letter-spacing: 2px; }
+
+        @media (max-width: 1024px) {
+            .interactive-booking, .cafe-showcase, .gallery-grid, .about-layout { grid-template-columns: 1fr; gap: 40px; }
+            .about-meta-info { border-left: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding-left: 0; padding-bottom: 30px; }
+            .hero h1 { font-size: 46px; }
+            section { padding: 80px 6%; }
+            .cafe-image-wrapper { height: 350px; position: relative; top: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="custom-cursor-follower" id="cursor-follower"></div>
+
+    <div id="splash-screen">
+        <img id="splash-logo" src="logo_transparent.png" alt="VERTEX14">
+    </div>
+
+    <div class="payment-overlay" id="payment-modal">
+        <div class="payment-card">
+            <h3>SECURE PAYMENT</h3>
+            <p style="text-align: center; font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">עלות שריון המרחב מחייבת הזנת כרטיס אשראי תקף.</p>
+            
+            <form onsubmit="handlePaymentSubmit(event)">
+                <div class="credit-fields">
+                    <input type="text" id="card-num" placeholder="מספר כרטיס (16 ספרות)" pattern="\d{16}" minlength="16" maxlength="16" required>
+                    <div class="credit-row-half">
+                        <input type="text" id="card-expiry" placeholder="תוקף (MM/YY)" pattern="(0[1-9]|1[0-2])\/\d{2}" minlength="5" maxlength="5" oninput="formatExpiry(this)" required>
+                        <input type="text" id="card-cvc" placeholder="CVC (3 ספרות)" pattern="\d{3}" minlength="3" maxlength="3" required>
+                    </div>
+                    <button type="submit" class="pay-now-btn">בצע תשלום ושריון חלל</button>
+                    <a href="#" class="cancel-pay-btn" onclick="closePaymentModal(event)">ביטול הזמנה</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="booking-success-modal">
+        <div class="success-card">
+            <h3>ORDER CONFIRMED</h3>
+            <div class="accent-line"></div>
+            <p style="font-size:15px; color:var(--text-muted); margin-bottom:20px;">התשלום אושר ונפח העבודה שוריין במערכת בהצלחה.</p>
+            
+            <div class="receipt-details">
+                <div class="receipt-row"><span class="receipt-label">משתמש:</span><span id="rec-name">-</span></div>
+                <div class="receipt-row"><span class="receipt-label">חלל שנבחר:</span><span id="rec-space">-</span></div>
+                <div class="receipt-row"><span class="receipt-label">תאריך עבודה:</span><span id="rec-date">-</span></div>
+                <div class="receipt-row"><span class="receipt-label">שעת התחלה:</span><span id="rec-time">-</span></div>
+                <div class="receipt-row"><span class="receipt-label">משך הזמנה:</span><span id="rec-duration">-</span></div>
+            </div>
+            <button class="close-receipt-btn" onclick="closeSuccessModal()">סגור</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo-container"><img src="logo_transparent.png" alt="VERTEX14 Logo"></div>
+        <nav>
+            <a href="#booking">הזמנות חלל</a>
+            <a href="#events">לו"ז אירועים</a>
+            <a href="#cafe">קפה ובר</a>
+            <a href="#gallery">גלריה</a>
+            <a href="#about">אודות ומחקר</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <div class="hero-slideshow-container">
+            <img src="Image1.png" alt="חזית חוץ" class="hero-slide active">
+            <img src="personal.png" alt="חלל למידה פנים" class="hero-slide">
+            <img src="cafe.png" alt="בית קפה פנים" class="hero-slide">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>VERTEX14</h1>
+            <p>מרחב ארכיטקטוני קטליטי בנמל תל אביב. פלטפורמה היברידית המשלבת מחקר אקוסטי מבודד, חללי מפגש זורמים ותרבות קפה מקומית.</p>
+        </div>
+    </div>
+
+    <section id="booking" class="reveal-element">
+        <div class="section-header">
+            <span class="section-tag">01 // SPACE OCCUPANCY</span>
+            <h2 class="section-title">שיריינו נפח עבודה אקוסטי</h2>
+        </div>
+        
+        <div class="interactive-booking">
+            <div class="booking-controls">
+                <div class="booking-tabs">
+                    <button class="tab-btn active" onclick="switchSpace('personal', this)">VERTEX אישי</button>
+                    <button class="tab-btn" onclick="switchSpace('medium', this)">VERTEX בינוני</button>
+                    <button class="tab-btn" onclick="switchSpace('large', this)">VERTEX גדול</button>
+                </div>
+                
+                <div id="space-text" class="space-details-text">
+                    תא למידה אישי המצויד בבידוד אקוסטי הרמטי של פנלי עץ ליניאריים, סיב אופטי עצמאי ומערכת סנכרון מדיה לפוקוס מקסימלי מול הים.
+                </div>
+
+                <form onsubmit="handleFormSubmit(event)">
+                    <div class="booking-fields">
+                        <input type="text" id="user-name" placeholder="שם מלא" required>
+                        
+                        <div class="input-wrapper">
+                            <div class="custom-select-trigger" onclick="toggleDropdown('calendar-box')">
+                                <span id="selected-date-text">בחר תאריך עבודה</span><span>▼</span>
+                            </div>
+                            <div id="calendar-box" class="calendar-dropdown">
+                                <div class="calendar-nav">
+                                    <button type="button" onclick="changeMonth(-1)">➔</button>
+                                    <span id="calendar-month-title" class="calendar-current-month"></span>
+                                    <button type="button" onclick="changeMonth(1)">➔</button>
+                                </div>
+                                <div class="calendar-days-grid" id="calendar-grid"></div>
+                            </div>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <div class="custom-select-trigger" onclick="toggleDropdown('time-box')">
+                                <span id="selected-time-text">בחר שעת התחלה</span><span>▼</span>
+                            </div>
+                            <div id="time-box" class="time-dropdown">
+                                <div class="time-grid" id="time-slots-container"></div>
+                            </div>
+                        </div>
+
+                        <div class="duration-container">
+                            <div class="duration-btn active" id="dur-1" onclick="setDuration(1)">שעה אחת</div>
+                            <div class="duration-btn" id="dur-2" onclick="setDuration(2)">שעתיים</div>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">אישור ושריון חלל</button>
+                </form>
+            </div>
+
+            <div class="space-display">
+                <div id="price-tag" class="price-badge">₪35 / שעה</div>
+                <img id="img-personal" class="space-img active" src="personal.png" alt="VERTEX אישי">
+                <img id="img-medium" class="space-img" src="medium.png" alt="VERTEX בינוני">
+                <img id="img-large" class="space-img" src="large.png" alt="VERTEX גדול">
+            </div>
+        </div>
+    </section>
+
+    <section id="events" class="reveal-element">
+        <div class="events-header-container">
+            <div class="section-header" style="margin-bottom: 0;">
+                <span class="section-tag">02 // PERFORMANCE TIMELINE</span>
+                <h2 class="section-title">לו"ז הופעות ואירועי תרבות המקום</h2>
+            </div>
+            <div class="acoustic-equalizer">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+            </div>
+        </div>
+
+        <div class="events-layout">
+            <div class="event-node" onclick="toggleEventDetails(this)">
+                <div class="event-main-info">
+                    <div>
+                        <div class="event-meta"><span>20:30 - 23:00</span><span>MAIN STAGE</span></div>
+                        <h3>עומר אדם // LIVE IN VERTEX14</h3>
+                        <div class="event-short-desc">הופעה אקוסטית אינטימית ומיוחדת תחת קונזולת העץ המרכזית.</div>
+                    </div>
+                    <div class="event-details-trigger">פירוט +</div>
+                </div>
+                <div class="event-extended-details">
+                    מופע חורף מיוחד וסגור ל-300 איש בלבד. חוויה אקוסטית יוצאת דופן שמנצלת את נתוני הבידוד וההחזר האקוסטי של חלל הפלטפורמה המרכזית בשילוב תאורת לד ליניארית מסונכרנת.
+                </div>
+            </div>
+
+            <div class="event-node" onclick="toggleEventDetails(this)">
+                <div class="event-main-info">
+                    <div>
+                        <div class="event-meta"><span>21:00 - 22:30</span><span>MAIN STAGE</span></div>
+                        <h3>יסמין מועלם // אקוסטיק סשן</h3>
+                        <div class="event-short-desc">מופע להקה אינטימי עם עיבודים מיוחדים לחלל האדריכלי החדש.</div>
+                    </div>
+                    <div class="event-details-trigger">פירוט +</div>
+                </div>
+                <div class="event-extended-details">
+                    יסמין מועלם מגיעה לפלטפורמה בנמל לערב של ביטים אלקטרוניים, כלי מיתר ואווירה פתוחה לתוך הלילה. מומלץ לשלב עם תפריט הקוקטיילים החדש של הבר.
+                </div>
+            </div>
+
+            <div class="event-node" onclick="toggleEventDetails(this)">
+                <div class="event-main-info">
+                    <div>
+                        <div class="event-meta"><span>22:00 - 00:00</span><span>MAIN STAGE</span></div>
+                        <h3>טונה // מופע פלטפורמה מיוחד</h3>
+                        <div class="event-short-desc">סט היפ-הופ בועט ומתוזמר מחדש המותאם לגיאומטריה של VERTEX14.</div>
+                    </div>
+                    <div class="event-details-trigger">פירוט +</div>
+                </div>
+                <div class="event-extended-details">
+                    טונה מגיע לערב חד פעמי ומנצל את הסאונד ההיקפי של החלל הציבורי הגדול. חוויה של ביטים וטקסטים חדים במרחב האקוסטי המבודד מול המים.
+                </div>
+            </div>
+
+            <div class="event-node" onclick="toggleEventDetails(this)">
+                <div class="event-main-info">
+                    <div>
+                        <div class="event-meta"><span>21:30 - 23:30</span><span>MAIN STAGE</span></div>
+                        <h3>שרית חדד // קלאסיקה בנמל</h3>
+                        <div class="event-short-desc">מופע חגיגי המשלב בין הלהיטים הגדולים לבין סאונד מודרני מבודד.</div>
+                    </div>
+                    <div class="event-details-trigger">פירוט +</div>
+                </div>
+                <div class="event-extended-details">
+                    הפקת מקור מיוחדת עבור פרויקט VERTEX14 – שילוב מרהיב בין מזרח למערב בעיבודים סימפוניים מצומצמים, מתחת למפתחי הגיאומטריה הליניארית המוארת.
+                </div>
+            </div>
+
+            <div class="event-node" onclick="toggleEventDetails(this)">
+                <div class="event-main-info">
+                    <div>
+                        <div class="event-meta"><span>20:00 - 22:00</span><span>UNDERGROUND HUB</span></div>
+                        <h3>רביד פלוטניק // מופע כלי מיתר אינטימי</h3>
+                        <div class="event-short-desc">גרסאות חורף חשופות ומיוחדות בתוך מעבדת הבידוד האקוסטית.</div>
+                    </div>
+                    <div class="event-details-trigger">פירוט +</div>
+                </div>
+                <div class="event-extended-details">
+                    חוויה יוצאת דופן בחלל המשני של הפרויקט – שילוב בין ראפ, סיפורים אישיים קרובים ורביעיית כלי מיתר מול קהל מצומצם המקיף את הבמה ב-360 מעלות.
+                </div>
+            </div>
+
+            <div class="event-node" onclick="toggleEventDetails(this)">
+                <div class="event-main-info">
+                    <div>
+                        <div class="event-meta"><span>23:30 - 04:00</span><span>UNDERGROUND HUB</span></div>
+                        <h3>VERTEX NIGHT // TECHNO LIVE SESSION</h3>
+                        <div class="event-short-desc">ערב אלקטרוני מחתרתי ואיכותי הלוקח את מערכת הסאונד לקצה.</div>
+                    </div>
+                    <div class="event-details-trigger">פירוט +</div>
+                </div>
+                <div class="event-extended-details">
+                    סטים ארוכים של תקליטנים מובילים בסצנה המקומית והבינלאומית. החלל משנה את פניו למצב חשוך מלא עם אלגוריתם תאורה ליניארי מבוסס תדרים.
+                </div>
+            </div>
+
+            <div class="event-node" onclick="toggleEventDetails(this)">
+                <div class="event-main-info">
+                    <div>
+                        <div class="event-meta"><span>17:00 - 19:00</span><span>CONFERENCE AREA</span></div>
+                        <h3>ARCH-TECH // פאנל קטליטי וטכנולוגיה</h3>
+                        <div class="event-short-desc">דיון פתוח על עתיד חללי היצירה ההיברידיים, עיצוב תדרים ומודלים דיגיטליים.</div>
+                    </div>
+                    <div class="event-details-trigger">פירוט +</div>
+                </div>
+                <div class="event-extended-details">
+                    מפגש יוצרים ואדריכלים בינלאומיים המארח הרצאות קצרות על אלגוריתמים אקוסטיים, עיצוב תאורה ליניארי ומחקר חומרים מתקדם. פתוח לקהל הרחב בהרשמה מראש.
+                </div>
+            </div>
+
+            <div class="event-node" onclick="toggleEventDetails(this)">
+                <div class="event-main-info">
+                    <div>
+                        <div class="event-meta"><span>19:00 - 21:00</span><span>CAFE DECK</span></div>
+                        <h3>Acoustic Jazz & Wine // רביעיית ג'אז</h3>
+                        <div class="event-short-desc">ערב רגוע של ג'אז חופשי, יין משובח ומאפי בוטיק מול השקיעה.</div>
+                    </div>
+                    <div class="event-details-trigger">פירוט +</div>
+                </div>
+                <div class="event-extended-details">
+                    חוויית בין ערביים קלאסית על דק המבנה. פתיחה נהדרת לערב המשלבת את תרבות הקפה והבר של המקום יחד עם מוזיקה חיה ואינטימית.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="menu-wrapper reveal-element">
+        <section id="cafe">
+            <div class="section-header">
+                <span class="section-tag">03 // VERTX14 CAFE & BAR</span>
+                <h2 class="section-title">תפריט הבית המלא // קפה ובר פרימיום</h2>
+            </div>
+
+            <div class="cafe-showcase">
+                <div class="cafe-image-wrapper">
+                    <img src="cafe.png" alt="VERTEX14 Cafe and Bar">
+                </div>
+
+                <div class="menu-list">
+                    <div class="menu-filter-container">
+                        <button class="filter-btn active" onclick="filterMenu('all', this)">הכל</button>
+                        <button class="filter-btn" onclick="filterMenu('cafe', this)">קפה ומאפים</button>
+                        <button class="filter-btn" onclick="filterMenu('bar', this)">קוקטיילים ואלכוהול</button>
+                    </div>
+
+                    <div id="menu-items-box">
+                        <div class="menu-item-node" data-cat="cafe">
+                            <div class="menu-category-title">SPECIALTY CAFE & BAKERY</div>
+                            <div class="menu-row">
+                                <div><span class="title-item">Linear Espresso Single</span><span class="desc-item">תערובת פולי קפה אפריקאיים בקלייה מקומית</span></div>
+                                <div class="line-dots"></div><span class="cost-item">₪13</span>
+                            </div>
+                        </div>
+                        <div class="menu-item-node" data-cat="cafe">
+                            <div class="menu-row" style="margin-top: 20px;">
+                                <div><span class="title-item">Acoustic Flat White</span><span class="desc-item">קפוצ'ינו חזק ומאוזן על בסיס חלב ייעודי או צמחי</span></div>
+                                <div class="line-dots"></div><span class="cost-item">₪18</span>
+                            </div>
+                        </div>
+                        <div class="menu-item-node" data-cat="cafe">
+                            <div class="menu-row" style="margin-top: 20px;">
+                                <div><span class="title-item">Matcha Latte Art</span><span class="desc-item">מאצ׳ה יפנית ירוקה וטהורה בשילוב ארט גיאומטרי</span></div>
+                                <div class="line-dots"></div><span class="cost-item">₪19</span>
+                            </div>
+                        </div>
+                        <div class="menu-item-node" data-cat="cafe">
+                            <div class="menu-row" style="margin-top: 20px;">
+                                <div><span class="title-item">Croissant Pistachio</span><span class="desc-item">מאפה קרואסון חמאה צרפתי במילוי קרם פיסטוק עשיר</span></div>
+                                <div class="line-dots"></div><span class="cost-item">₪26</span>
+                            </div>
+                        </div>
+                        <div class="menu-item-node" data-cat="cafe">
+                            <div class="menu-row" style="margin-top: 20px;">
+                                <div><span class="title-item">Salted Caramel Brownie</span><span class="desc-item">בראוניז מרוכז משוקולד ולרונה עם נגיעות מלח ים אטלנטי</span></div>
+                                <div class="line-dots"></div><span class="cost-item">₪16</span>
+                            </div>
+                        </div>
+
+                        <div class="menu-item-node" data-cat="bar">
+                            <div class="menu-category-title">SIGNATURE COCKTAILS & CRAFT DRINKS</div>
+                            <div class="menu-row">
+                                <div><span class="title-item">Acoustic Gin & Tonic</span><span class="desc-item">ג'ין פרימיום, מי טוניק בוטניים, מלפפון ובזיליקום</span></div>
+                                <div class="line-dots"></div><span class="cost-item">₪48</span>
+                            </div>
+                        </div>
+                        <div class="menu-item-node" data-cat="bar">
+                            <div class="menu-row" style="margin-top: 20px;">
+                                <div><span class="title-item">Linear Negroni</span><span class="desc-item">קמפארי, ורמוט אדום, ג'ין מושרה בקליפות תפוז וקו קרח גיאומטרי</span></div>
+                                <div class="line-dots"></div><span class="cost-item">₪46</span>
+                            </div>
+                        </div>
+                        <div class="menu-item-node" data-cat="bar">
+                            <div class="menu-row" style="margin-top: 20px;">
+                                <div><span class="title-item">Vertex Whiskey Sour</span><span class="desc-item">בורבון איכותי, מיץ לימון טרי, סירופ סוכר, וחלבון מוקצף אוורירי</span></div>
+                                <div class="line-dots"></div><span class="cost-item">₪52</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section id="gallery" class="reveal-element">
+        <div class="section-header">
+            <span class="section-tag">04 // ARCHITECTURAL VISUALIZATION</span>
+            <h2 class="section-title">גלריית מבטים ומודל המרחב</h2>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="Image1.png" alt="חזית פרויקט VERTEX14">
+                <div class="gallery-caption">פרויקט VERTEX14 // קונספט מרחבי מקורי</div>
+            </div>
+            <div class="gallery-item">
+                <img src="personal.png" alt="פנים המבנה">
+                <div class="gallery-caption">קפסולות ותאי למידה אקוסטיים // מבט פנים</div>
+            </div>
+            <div class="gallery-item">
+                <img src="cafe.png" alt="אזור הבר">
+                <div class="gallery-caption">VERTEX14 CAFE & BAR // מבט מרווה</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="reveal-element">
+        <div class="section-header">
+            <span class="section-tag">05 // ARCHITECT & DESIGNER</span>
+            <h2 class="section-title">צוות ומחקר רעיוני</h2>
+        </div>
+        <div class="about-layout">
+            <div class="about-meta-info">
+                <div class="about-meta-row">
+                    <span class="about-meta-label">DESIGNER</span>
+                    <span class="about-meta-value">צחי עזוז // Tzachi Azuz</span>
+                </div>
+                <div class="about-meta-row">
+                    <span class="about-meta-label">LOCATION</span>
+                    <span class="about-meta-value">ביתן 14 // נמל תל אביב</span>
+                </div>
+                <div class="about-meta-row">
+                    <span class="about-meta-label">ACADEMIC</span>
+                    <span class="about-meta-value">שנה ב׳ // עיצוב פנים ותקשורת חזותית</span>
+                </div>
+            </div>
+            <div class="about-bio-container">
+                <p class="about-bio-text">
+                    היי אני צחי עזוז, סטודנט שנה ב' לעיצוב פנים ותקשורת חזותית, בפרוייקט זה הקמתי את המרכז הלימודי VERTEX14 בנמל תל אביב בביתן 14, חשבתי על מה אני בתור סטודנט הייתי רוצה שיהיה במרכז, המרכז משלב פנאי ותרבות, הופעות וחיי לילה, שפה גאומטרית חזקה של משולשים ושבירות, שפה חמימה ומודגשת בתוך הטירוף של נמל תל אביב.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        VERTEX14 // © 2026 פרויקט גמר אדריכלי. סטודיו עיצוב מרחבי דיגיטלי.
+    </footer>
+
+    <script>
+        let currentSpace = 'personal';
+        let selectedDate = '';
+        let selectedTime = '';
+        let selectedDuration = 1;
+        let temporaryUserName = '';
+
+        let calendarDate = new Date(2026, 5, 21);
+        const currentRealToday = new Date(2026, 5, 21);
+
+        const monthNamesHebrew = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
+
+        const follower = document.getElementById('cursor-follower');
+        document.addEventListener('mousemove', (e) => {
+            follower.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+        });
+
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        
+        function startHeroSlideshow() {
+            setInterval(() => {
+                slides[currentSlideIndex].classList.remove('active');
+                currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+                slides[currentSlideIndex].classList.add('active');
+            }, 4000);
+        }
+        startHeroSlideshow();
+
+        function filterMenu(category, btnClicked) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btnClicked.classList.add('active');
+
+            const items = document.querySelectorAll('.menu-item-node');
+            items.forEach(item => {
+                const itemCat = item.getAttribute('data-cat');
+                if (category === 'all' || itemCat === category) {
+                    item.style.display = 'block';
+                    setTimeout(() => { item.style.opacity = '1'; item.style.transform = 'scale(1)'; }, 10);
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.95)';
+                    setTimeout(() => { item.style.display = 'none'; }, 400);
+                }
+            });
+        }
+
+        const revealElements = document.querySelectorAll('.reveal-element');
+        
+        function checkReveal() {
+            const triggerBottom = window.innerHeight * 0.85;
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < triggerBottom) {
+                    el.classList.add('revealed');
+                }
+            });
+        }
+        window.addEventListener('scroll', checkReveal);
+        setTimeout(checkReveal, 2400); 
+
+        const spaceNamesHebrew = { personal: "VERTEX אישי", medium: "VERTEX בינוני", large: "VERTEX גדול" };
+        const spaceData = {
+            personal: { text: "תא למידה אישי המצויד בבידוד אקוסטי הרמטי של פנלי עץ ליניאריים, סיב אופטי עצמאי ומערכת סנכרון מדיה לפוקוס מקסימלי מול הים.", price: "₪35 / שעה" },
+            medium: { text: "נפח עבודה זוגי / סטודיו קטן (Dual Hub) המותאם לעבודה משותפת, מצויד במסך מגע הידראולי רחב ופרטי ריהוט ארגונומיים מותאמים.", price: "₪60 / שעה" },
+            large: { text: "מעבדת צוות קבוצתית (עד 6 משתתפים) לחשיפת פרויקטים, מצוידת במערכת מקרנים היקפית 360 מעלות ובידוד תדרים נמוכים.", price: "₪110 / שעה" }
+        };
+
+        function switchSpace(type, buttonClicked) {
+            currentSpace = type;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            buttonClicked.classList.add('active');
+            document.getElementById('space-text').innerText = spaceData[type].text;
+            document.getElementById('price-tag').innerText = spaceData[type].price;
+            document.querySelectorAll('.space-img').forEach(img => img.classList.remove('active'));
+            document.getElementById('img-' + type).classList.add('active');
+
+            const dur2Btn = document.getElementById('dur-2');
+            if (type !== 'large') {
+                dur2Btn.classList.add('disabled');
+                setDuration(1); 
+            } else {
+                dur2Btn.classList.remove('disabled');
+            }
+        }
+
+        function toggleDropdown(id) {
+            event.stopPropagation();
+            const el = document.getElementById(id);
+            const isVisible = el.style.display === 'block';
+            document.querySelectorAll('.calendar-dropdown, .time-dropdown').forEach(d => d.style.display = 'none');
+            if (!isVisible) el.style.display = 'block';
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            
+            document.getElementById('calendar-month-title').innerText = `${monthNamesHebrew[month]} ${year}`;
+            
+            const dayLabels = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
+            dayLabels.forEach(l => {
+                const labelEl = document.createElement('div'); labelEl.className = 'cal-day-label'; labelEl.innerText = l; grid.appendChild(labelEl);
+            });
+            
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+            
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyDiv = document.createElement('div'); emptyDiv.className = 'cal-day empty'; grid.appendChild(emptyDiv);
+            }
+            
+            for (let day = 1; day <= totalDays; day++) {
+                const dayEl = document.createElement('div'); dayEl.className = 'cal-day'; dayEl.innerText = day;
+                const thisCellDate = new Date(year, month, day);
+                
+                if (thisCellDate < currentRealToday) {
+                    dayEl.classList.add('past');
+                } else {
+                    dayEl.onclick = (e) => {
+                        e.stopPropagation(); 
+                        document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
+                        dayEl.classList.add('selected'); 
+                        let displayMonth = (month + 1).toString().padStart(2, '0');
+                        let displayDay = day.toString().padStart(2, '0');
+                        selectedDate = `${displayDay}/${displayMonth}/${year}`;
+                        document.getElementById('selected-date-text').innerText = selectedDate;
+                        document.getElementById('calendar-box').style.display = 'none';
+                    };
+                }
+                grid.appendChild(dayEl);
+            }
+        }
+
+        function changeMonth(direction) {
+            event.stopPropagation();
+            calendarDate.setMonth(calendarDate.getMonth() + direction);
+            renderCalendar();
+        }
+
+        function initTimeSlots() {
+            const container = document.getElementById('time-slots-container');
+            const slots = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '00:00', '01:00', '02:00'];
+            slots.forEach(slot => {
+                const slotEl = document.createElement('div'); slotEl.className = 'time-slot'; slotEl.innerText = slot;
+                slotEl.onclick = (e) => {
+                    e.stopPropagation(); document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                    slotEl.classList.add('selected'); selectedTime = slot;
+                    document.getElementById('selected-time-text').innerText = selectedTime;
+                    document.getElementById('time-box').style.display = 'none';
+                };
+                container.appendChild(slotEl);
+            });
+        }
+
+        function formatExpiry(input) {
+            let code = input.value.replace(/\D/g, '');
+            if (code.length > 2) {
+                input.value = code.substring(0, 2) + '/' + code.substring(2, 4);
+            } else {
+                input.value = code;
+            }
+        }
+
+        function setDuration(hours) {
+            if (hours === 2 && currentSpace !== 'large') return; 
+            selectedDuration = hours;
+            document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('dur-' + hours).classList.add('active');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            temporaryUserName = document.getElementById('user-name').value;
+            if (!selectedDate || !selectedTime) { 
+                alert('אנא בחר תאריך ושעת התחלה מתוך התפריטים.'); 
+                return; 
+            }
+            document.getElementById('payment-modal').classList.add('active');
+        }
+
+        function handlePaymentSubmit(e) {
+            e.preventDefault();
+            document.getElementById('payment-modal').classList.remove('active');
+            
+            document.getElementById('rec-name').innerText = temporaryUserName;
+            document.getElementById('rec-space').innerText = spaceNamesHebrew[currentSpace];
+            document.getElementById('rec-date').innerText = selectedDate;
+            document.getElementById('rec-time').innerText = selectedTime;
+            document.getElementById('rec-duration').innerText = selectedDuration === 1 ? "שעה אחת" : "שעתיים";
+            
+            document.getElementById('booking-success-modal').classList.add('active');
+            
+            document.getElementById('card-num').value = '';
+            document.getElementById('card-expiry').value = '';
+            document.getElementById('card-cvc').value = '';
+        }
+
+        function closePaymentModal(e) {
+            e.preventDefault();
+            document.getElementById('payment-modal').classList.remove('active');
+        }
+
+        function closeSuccessModal() { document.getElementById('booking-success-modal').classList.remove('active'); }
+        document.addEventListener('click', () => { document.querySelectorAll('.calendar-dropdown, .time-dropdown').forEach(d => d.style.display = 'none'); });
+        
+        function toggleEventDetails(node) {
+            const isActive = node.classList.contains('active');
+            document.querySelectorAll('.event-node').forEach(item => item.classList.remove('active'));
+            if (!isActive) node.classList.add('active');
+        }
+
+        renderCalendar(); initTimeSlots();
+    </script>
+</body>
+</html>
