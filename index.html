@@ -5,38 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VERTEX14 // THE PLATFORM</title>
     
-    <style>
-    /* זה התיקון שמונע מהאתר "לברוח" בטלפון */
-/* תיקון רספונסיביות בטוח */
+   /* תיקון רספונסיביות בטוח */
     img, .interactive-booking, .hero, section {
         max-width: 100% !important;
         box-sizing: border-box !important;
     }
+    
     @media (max-width: 768px) {
         header { flex-direction: column !important; padding-top: 15px !important; }
         .gallery-grid { grid-template-columns: 1fr !important; }
+        nav { margin-top: 25px !important; padding-bottom: 10px !important; }
     }
-    }
-    
-    /* פנייה לכל תגית nav שיש בדף */
-    nav { 
-        margin-top: 25px !important; 
-        padding-bottom: 10px !important;
-    }
-}
-}
-        .gallery-grid { grid-template-columns: 1fr !important; }
-        @media (max-width: 600px) {
-    header { padding: 10px !important; }
-    nav { 
-        gap: 5px !important; 
-        font-size: 10px !important; 
-    }
-    nav a { margin-right: 5px !important; }
-    }
-}
-}
-    }
+    
+    @media (max-width: 600px) {
+        header { padding: 10px !important; }
+        nav { gap: 5px !important; font-size: 10px !important; }
+        nav a { margin-right: 5px !important; }
+    }
 </style>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;600;700&family=Syncopate:wght@400;700&family=Oswald:wght@200;400&display=swap');
