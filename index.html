@@ -7,14 +7,15 @@
     
     <style>
     /* זה התיקון שמונע מהאתר "לברוח" בטלפון */
-    img, .interactive-booking, .hero, section {
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-    }
-@media (max-width: 768px) {
-    header { 
-        flex-direction: column !important; 
-        padding-top: 15px !important; 
+/* תיקון רספונסיביות בטוח */
+    img, .interactive-booking, .hero, section {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    @media (max-width: 768px) {
+        header { flex-direction: column !important; padding-top: 15px !important; }
+        .gallery-grid { grid-template-columns: 1fr !important; }
+    }
     }
     
     /* פנייה לכל תגית nav שיש בדף */
